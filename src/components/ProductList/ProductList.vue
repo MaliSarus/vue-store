@@ -1,12 +1,13 @@
 <template>
-    <ul class="catalog__list">
-        <ProductItem v-for="(product,index) in products"
-                     :title="product.title"
-                     :price="product.price"
-                     :image="product.image"
-                     :key="index"
-        />
-    </ul>
+    <div>
+        <div v-if="products.length === 0">Товаров нет</div>
+        <ul v-else class="catalog__list">
+            <ProductItem v-for="product in products"
+                         :product="product"
+                         :key="product.id"
+            />
+        </ul>
+    </div>
 </template>
 
 <script>
