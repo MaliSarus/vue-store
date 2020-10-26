@@ -5,6 +5,7 @@
             <ProductItem v-for="product in products"
                          :product="product"
                          :key="product.id"
+                         @goToPage="$emit('goToPage', $event)"
             />
         </ul>
     </div>
@@ -16,7 +17,12 @@
     export default {
         name: "ProductList",
         components: {ProductItem},
-        props: ['products']
+        props: ['products'],
+        methods: {
+            gotopage(event){
+                console.log(event)
+            }
+        }
     }
 </script>
 

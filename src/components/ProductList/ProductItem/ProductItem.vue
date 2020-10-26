@@ -1,11 +1,11 @@
 <template>
     <li class="catalog__item" >
-        <a class="catalog__pic" href="#">
+        <a class="catalog__pic" href="#" @click.prevent="goToPage(product.id)">
             <img :src="product.image" :alt="product.title">
         </a>
 
         <h3 class="catalog__title">
-            <a href="#">
+            <a href="#" @click.prevent="goToPage">
                 {{product.title}}
             </a>
         </h3>
@@ -34,7 +34,15 @@
         ),
         props: [
             'product'
-        ]
+        ],
+        methods:{
+            goToPage(id){
+                this.$emit('goToPage', {
+                    page: 'product',
+                    params: id,
+                })
+            }
+        }
     }
 </script>
 

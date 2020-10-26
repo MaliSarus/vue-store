@@ -1,9 +1,9 @@
 <template>
     <ul class="catalog__pagination pagination">
         <li class="pagination__item">
-            <a class="pagination__link pagination__link--arrow" :class="{'pagination__link--disabled': page === 1}"
+            <a class="pagination__link pagination__link--arrow" :class="{'pagination__link--disabled': firstPage}"
                aria-label="Предыдущая страница"
-               @click.prevent="paginatePrev($event)"
+               @click.prevent="paginatePrev(firstPage)"
             >
                 <svg width="8" height="14" fill="currentColor">
                     <use xlink:href="#icon-arrow-left"></use>
@@ -18,10 +18,9 @@
 
         <li class="pagination__item">
             <a class="pagination__link pagination__link--arrow"
-               :class="{'pagination__link--disabled': page === this.pages}"
+               :class="{'pagination__link--disabled': lastPage}"
                href="#" aria-label="Следующая страница"
-               @click.prevent="paginateNext($event)"
-               :disabled="page === this.pages"
+               @click.prevent="paginateNext(lastPage)"
             >
                 <svg width="8" height="14" fill="currentColor">
                     <use xlink:href="#icon-arrow-right"></use>
@@ -46,20 +45,26 @@
         computed: {
             pages() {
                 return Math.ceil(this.count / this.perPage);
+            },
+            firstPage(){
+               return this.page === 1
+            },
+            lastPage(){
+                return this.page === this.pages
             }
         },
         methods:{
             paginate(page){
                 this.$emit('paginate', page)
             },
-            paginateNext(event){
-                if(!event.target.classList.contains('pagination__link--disabled')) {
+            paginateNext(limit){
+                if(!limit) {
                     this.page = this.page + 1;
                     this.paginate(this.page)
                 }
             },
-            paginatePrev(event){
-                if(!event.target.classList.contains('pagination__link--disabled')) {
+            paginatePrev(limit){
+                if(!limit) {
                     this.page = this.page - 1;
                     this.paginate(this.page)
                 }
