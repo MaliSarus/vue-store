@@ -32,45 +32,52 @@
                 <ul class="colors">
                     <li class="colors__item">
                         <label class="colors__label">
-                            <input class="colors__radio sr-only" type="radio" name="color" value="#73B6EA"  v-model="currentColor">
+                            <input class="colors__radio sr-only" type="radio" name="color" value="#73B6EA"
+                                   v-model="currentColor">
                             <span class="colors__value" style="background-color: #73B6EA;">
                   </span>
                         </label>
                     </li>
                     <li class="colors__item">
                         <label class="colors__label">
-                            <input class="colors__radio sr-only" type="radio" name="color" value="#FFBE15" v-model="currentColor">
+                            <input class="colors__radio sr-only" type="radio" name="color" value="#FFBE15"
+                                   v-model="currentColor">
                             <span class="colors__value" style="background-color: #FFBE15;">
                   </span>
                         </label>
                     </li>
                     <li class="colors__item">
                         <label class="colors__label">
-                            <input class="colors__radio sr-only" type="radio" name="color" value="#939393" v-model="currentColor">
+                            <input class="colors__radio sr-only" type="radio" name="color" value="#939393"
+                                   v-model="currentColor">
                             <span class="colors__value" style="background-color: #939393;">
                 </span></label>
                     </li>
                     <li class="colors__item">
                         <label class="colors__label">
-                            <input class="colors__radio sr-only" type="radio" name="color" value="#8BE000" v-model="currentColor">
+                            <input class="colors__radio sr-only" type="radio" name="color" value="#8BE000"
+                                   v-model="currentColor">
                             <span class="colors__value" style="background-color: #8BE000;">
                 </span></label>
                     </li>
                     <li class="colors__item">
                         <label class="colors__label">
-                            <input class="colors__radio sr-only" type="radio" name="color" value="#FF6B00" v-model="currentColor">
+                            <input class="colors__radio sr-only" type="radio" name="color" value="#FF6B00"
+                                   v-model="currentColor">
                             <span class="colors__value" style="background-color: #FF6B00;">
                 </span></label>
                     </li>
                     <li class="colors__item">
                         <label class="colors__label">
-                            <input class="colors__radio sr-only" type="radio" name="color" value="#FFF" v-model="currentColor">
+                            <input class="colors__radio sr-only" type="radio" name="color" value="#FFF"
+                                   v-model="currentColor">
                             <span class="colors__value" style="background-color: #FFF;">
                 </span></label>
                     </li>
                     <li class="colors__item">
                         <label class="colors__label">
-                            <input class="colors__radio sr-only" type="radio" name="color" value="#222" v-model="currentColor">
+                            <input class="colors__radio sr-only" type="radio" name="color" value="#222"
+                                   v-model="currentColor">
                             <span class="colors__value" style="background-color: #000;">
                 </span></label>
                     </li>
@@ -157,7 +164,7 @@
                 currentPriceFrom: 0,
                 currentPriceTo: 0,
                 currentCategoryId: 0,
-                currentColor:'',
+                currentColor: '',
             }
         ),
         props: [
@@ -171,31 +178,31 @@
                 return categories;
             }
         },
-        methods:{
-            submit(){
+        methods: {
+            submit() {
                 this.$emit('update:priceFrom', this.currentPriceFrom);
                 this.$emit('update:priceTo', this.currentPriceTo);
                 this.$emit('update:categoryId', this.currentCategoryId);
                 this.$emit('update:color', this.currentColor);
             },
-            reset(){
+            reset() {
                 this.$emit('update:priceFrom', 0);
                 this.$emit('update:priceTo', 0);
                 this.$emit('update:categoryId', 0);
                 this.$emit('update:color', '');
             },
         },
-        watch:{
-            priceFrom(value){
+        watch: {
+            priceFrom(value) {
                 this.currentPriceFrom = value;
             },
-            priceTo(value){
+            priceTo(value) {
                 this.currentPriceTo = value;
             },
-            categoryId(value){
+            categoryId(value) {
                 this.currentCategoryId = value;
             },
-            color(value){
+            color(value) {
                 this.currentColor = value
             }
         }
