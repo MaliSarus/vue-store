@@ -3,7 +3,7 @@
         <li class="pagination__item">
             <a class="pagination__link pagination__link--arrow" :class="{'pagination__link--disabled': page === 1}"
                aria-label="Предыдущая страница"
-               @click.prevent="paginatePrev()"
+               @click.prevent="paginatePrev($event)"
             >
                 <svg width="8" height="14" fill="currentColor">
                     <use xlink:href="#icon-arrow-left"></use>
@@ -20,7 +20,7 @@
             <a class="pagination__link pagination__link--arrow"
                :class="{'pagination__link--disabled': page === this.pages}"
                href="#" aria-label="Следующая страница"
-               @click.prevent="paginateNext()"
+               @click.prevent="paginateNext($event)"
                :disabled="page === this.pages"
             >
                 <svg width="8" height="14" fill="currentColor">
@@ -52,21 +52,21 @@
             paginate(page){
                 this.$emit('paginate', page)
             },
-            paginateNext(){
-                this.page = this.page + 1;
-                console.log(this.pages)
-                this.paginate(this.page)
+            paginateNext(event){
+                if(!event.target.classList.contains('pagination__link--disabled')) {
+                    this.page = this.page + 1;
+                    this.paginate(this.page)
+                }
             },
-            paginatePrev(){
-                this.page = this.page - 1;
-                this.paginate(this.page)
+            paginatePrev(event){
+                if(!event.target.classList.contains('pagination__link--disabled')) {
+                    this.page = this.page - 1;
+                    this.paginate(this.page)
+                }
             }
         }
     }
 </script>
 
 <style scoped>
-    .pagination__link--disabled{
-        pointer-events: none;
-    }
 </style>
