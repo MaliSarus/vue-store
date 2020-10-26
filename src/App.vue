@@ -15,6 +15,7 @@
                     :price-from.sync="filterPriceFrom"
                     :price-to.sync="filterPriceTo"
                     :color.sync="filterColor"
+                    :page.sync="page"
             />
             <section class="catalog">
                 <ProductList :products="products"/>
@@ -29,6 +30,7 @@
     import ProductList from "@/components/ProductList/ProductList";
     import AppPagination from "./components/AppPagination/AppPagination";
     import ProductFilter from "./components/ProductFilter/ProductFilter";
+
 
     export default {
         name: 'App',

@@ -21,6 +21,7 @@
                :class="{'pagination__link--disabled': page === this.pages}"
                href="#" aria-label="Следующая страница"
                @click.prevent="paginateNext()"
+               :disabled="page === this.pages"
             >
                 <svg width="8" height="14" fill="currentColor">
                     <use xlink:href="#icon-arrow-right"></use>
@@ -65,5 +66,7 @@
 </script>
 
 <style scoped>
-
+    .pagination__link--disabled{
+        pointer-events: none;
+    }
 </style>
