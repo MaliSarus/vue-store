@@ -5,7 +5,6 @@
             <ProductItem v-for="product in products"
                          :product="product"
                          :key="product.id"
-                         @goToPage="$emit('goToPage', $event)"
             />
         </ul>
     </div>

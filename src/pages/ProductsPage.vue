@@ -18,7 +18,7 @@
                     :currentPage.sync="page"
             />
             <section class="catalog">
-                <ProductList :products="products" @goToPage="$emit('goToPage', $event)"/>
+                <ProductList :products="products"/>
                 <AppPagination
                         v-model="page"
                         :count="countProducts"
