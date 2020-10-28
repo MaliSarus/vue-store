@@ -7,12 +7,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        cartProducts: [
-            {
-                productId: 1,
-                amount: 2
-            }
-        ],
+        cartProducts: [],
         userAccessKey: null,
         cartProductsData: null
     },
@@ -78,10 +73,10 @@ export default new Vuex.Store({
                 })
 
         },
-        updateCartProductAmount({state, commit}, {productId, amount}){
+        updateCartProductAmount({state, commit}, {productId, amount}) {
             commit('updateProductAmount', {productId, amount})
-            if(amount < 1){
-                return ;
+            if (amount < 1) {
+                return;
             }
             return axios
                 .put(BASE_URL + '/baskets/products', {
@@ -95,16 +90,16 @@ export default new Vuex.Store({
                 .then(response => {
                     commit('updateCartProductsData', response.data.items)
                 })
-                .catch(()=> {
+                .catch(() => {
                     commit('syncCartProducts')
                 })
 
         },
-        deleteCartProduct({state, commit}, productId){
+        deleteCartProduct({state, commit}, productId) {
             commit('deleteProduct', productId)
             return axios
                 .delete(BASE_URL + '/baskets/products', {
-                    data:{
+                    data: {
                         productId
                     },
                     params: {
@@ -114,7 +109,7 @@ export default new Vuex.Store({
                 .then(response => {
                     commit('updateCartProductsData', response.data.items)
                 })
-                .catch(()=> {
+                .catch(() => {
                     commit('syncCartProducts')
                 })
 
@@ -123,23 +118,21 @@ export default new Vuex.Store({
 
     getters: {
         cartProductsDetail(state) {
-            if (state.cartProductsData) {
-                return state.cartProducts.map(item => {
-                    let product = state.cartProductsData.find(p => p.product.id === item.productId).product;
-                    return {
-                        ...item,
-                        product: {
-                            ...product,
-                            image: product.image.file.url
-                        }
+
+            return state.cartProducts.map(item => {
+                let product = state.cartProductsData.find(p => p.product.id === item.productId).product;
+                return {
+                    ...item,
+                    product: {
+                        ...product,
+                        image: product.image.file.url
                     }
-                })
-            }
+                }
+            })
+
         },
         cartTotalPrice(state, getters) {
-            if (state.cartProductsData) {
-                return getters.cartProductsDetail.reduce((acc, item) => (item.product.price * item.amount) + acc, 0)
-            }
+            return getters.cartProductsDetail.reduce((acc, item) => (item.product.price * item.amount) + acc, 0)
         }
     },
     modules: {}
