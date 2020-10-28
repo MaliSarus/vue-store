@@ -12,19 +12,23 @@
         <span class="product__code">Артикул: {{item.product.id}}</span>
 
         <div class="product__counter form__counter">
-            <button type="button" aria-label="Убрать один товар" @click.prevent="subAmount">
-                <svg width="10" height="10" fill="currentColor">
-                    <use xlink:href="#icon-minus"></use>
-                </svg>
-            </button>
-
+            <CounterButton
+                    label="Убрать один товар"
+                    icon-width="10"
+                    icon-height="10"
+                    icon="#icon-minus"
+                    type="sub"
+                    v-model="amount"
+            />
             <input type="text" v-model.number="amount" name="count">
-
-            <button type="button" aria-label="Добавить один товар" @click.prevent="incAmount">
-                <svg width="10" height="10" fill="currentColor">
-                    <use xlink:href="#icon-plus"></use>
-                </svg>
-            </button>
+            <CounterButton
+                    label="Добавить один товар"
+                    icon-width="10"
+                    icon-height="10"
+                    icon="#icon-plus"
+                    type="add"
+                    v-model="amount"
+            />
         </div>
 
         <b class="product__price">
@@ -43,6 +47,7 @@
 <script>
     import numberFormat from "@/helpers/numberFormat";
     import {mapMutations, mapActions} from 'vuex'
+    import CounterButton from "@/components/UI/CounterButton";
 
     export default {
         name: "CartItem",
@@ -50,6 +55,7 @@
         filters: {
             numberFormat
         },
+        components:{CounterButton},
         computed: {
             amount: {
                 get() {

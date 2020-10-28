@@ -89,19 +89,23 @@
 
                         <div class="item__row">
                             <div class="form__counter">
-                                <button type="button" aria-label="Убрать один товар" @click.prevent="subAmount">
-                                    <svg width="12" height="12" fill="currentColor">
-                                        <use xlink:href="#icon-minus"></use>
-                                    </svg>
-                                </button>
-
+                                <CounterButton
+                                        label="Убрать один товар"
+                                        icon-width="12"
+                                        icon-height="12"
+                                        icon="#icon-minus"
+                                        type="sub"
+                                        v-model="productAmount"
+                                />
                                 <input type="text" v-model.number="productAmount">
-
-                                <button type="button" aria-label="Добавить один товар" @click.prevent="incAmount">
-                                    <svg width="12" height="12" fill="currentColor">
-                                        <use xlink:href="#icon-plus"></use>
-                                    </svg>
-                                </button>
+                                <CounterButton
+                                        label="Добавить один товар"
+                                        icon-width="12"
+                                        icon-height="12"
+                                        icon="#icon-plus"
+                                        type="add"
+                                        v-model="productAmount"
+                                />
                             </div>
 
                             <button class="button button--primery" type="submit" :disabled="productAddSending">
@@ -180,17 +184,17 @@
 
 <script>
 
-    // import categories from "@/data/Categories/categories";
     import goToPage from "@/helpers/goToPage";
     import numberFormat from "@/helpers/numberFormat";
     import axios from 'axios'
     import {BASE_URL} from "@/helpers/config";
     import {mapActions} from 'vuex'
     import Loader from "../components/UI/Loader/Loader";
+    import CounterButton from "@/components/UI/CounterButton";
 
     export default {
         name: "ProductPage",
-        components: {Loader},
+        components: {Loader, CounterButton},
         data() {
             return {
                 currentColor: '',
