@@ -3,14 +3,14 @@
         <div class="content__top">
             <ul class="breadcrumbs">
                 <li class="breadcrumbs__item">
-                    <a class="breadcrumbs__link" href="index.html" @click.prevent="goToPage('products')">
+                    <router-link class="breadcrumbs__link" :to="{name: 'products'}">
                         Каталог
-                    </a>
+                    </router-link>
                 </li>
                 <li class="breadcrumbs__item">
-                    <a class="breadcrumbs__link" href="#" @click.prevent="goToPage('products')">
+                    <router-link class="breadcrumbs__link" :to="{name: 'products'}">
                         {{currentCategoty.title}}
-                    </a>
+                    </router-link>
                 </li>
                 <li class="breadcrumbs__item">
                     <a class="breadcrumbs__link">
@@ -19,8 +19,9 @@
                 </li>
             </ul>
         </div>
-
-        <section class="item">
+        <div v-if="loadingFailed">Произошла ошибка при загрузке</div>
+        <Loader v-if="loading"/>
+        <section v-if="!loadingFailed && !loading" class="item">
             <div class="item__pics pics">
                 <div class="pics__wrapper">
                     <img width="570" height="570" :src="currentProduct.image"
@@ -34,7 +35,7 @@
                     {{currentProduct.title}}
                 </h2>
                 <div class="item__form">
-                    <form class="form" action="#" method="POST">
+                    <form class="form" action="#" @submit.prevent="addToCart" method="POST">
                         <b class="item__price">
                             {{currentProduct.price | numberFormat}} ₽
                         </b>
@@ -44,7 +45,8 @@
                             <ul class="colors" v-if="currentProduct.colors">
                                 <li class="colors__item" v-for="color in currentProduct.colors" :key="color">
                                     <label class="colors__label">
-                                        <input class="colors__radio sr-only" type="radio" name="color-item" :value="color"
+                                        <input class="colors__radio sr-only" type="radio" name="color-item"
+                                               :value="color"
                                                v-model="currentColor">
                                         <span class="colors__value" :style="{'background-color': color}">
                     </span>
@@ -93,7 +95,7 @@
                                     </svg>
                                 </button>
 
-                                <input type="text" value="1" name="count">
+                                <input type="text" v-model.number="productAmount">
 
                                 <button type="button" aria-label="Добавить один товар">
                                     <svg width="12" height="12" fill="currentColor">
@@ -102,8 +104,8 @@
                                 </button>
                             </div>
 
-                            <button class="button button--primery" type="submit">
-                                В корзину
+                            <button class="button button--primery" type="submit" :disabled="productAddSending">
+                                {{buttonText}}
                             </button>
                         </div>
                     </form>
@@ -177,32 +179,91 @@
 </template>
 
 <script>
-    import products from "@/data/Products/products";
-    import categories from "@/data/Categories/categories";
+
+    // import categories from "@/data/Categories/categories";
     import goToPage from "@/helpers/goToPage";
     import numberFormat from "@/helpers/numberFormat";
+    import axios from 'axios'
+    import {BASE_URL} from "@/helpers/config";
+    import {mapActions} from 'vuex'
+    import Loader from "../components/UI/Loader/Loader";
+
     export default {
         name: "ProductPage",
-        props:['pageParams'],
-        data(){
+        components: {Loader},
+        data() {
             return {
-                currentColor: ''
+                currentColor: '',
+                productAmount: 1,
+                productData: null,
+                loading: false,
+                loadingFailed: false,
+                productAdded: false,
+                productAddSending: false,
+
             }
         },
-        filters:{
+        filters: {
             numberFormat
         },
-        computed:{
-            currentProduct(){
-                return products.find((product)=>product.id === this.pageParams.id);
+        computed: {
+            buttonText() {
+                if (!this.productAddSending && !this.productAdded){
+                    return 'В корзину'
+                } else if (this.productAddSending && !this.productAdded){
+                    return 'Добавляем'
+                } else {
+                    return 'Готово'
+                }
             },
-            currentCategoty(){
-                return categories.find((category)=>category.id === this.currentProduct.categoryId);
+            currentProduct() {
+                return this.productData ?
+                    {
+                        ...this.productData,
+                        image: this.productData.image.file.url,
+                        colors: this.productData.colors.map(color => color.code)
+                    }
+                    : {}
+            },
+            currentCategoty() {
+                return this.productData ? this.productData.category : '';
             },
         },
-        methods:{
-            goToPage
-        }
+        methods: {
+            ...mapActions(['addProductToCart']),
+            goToPage,
+            addToCart() {
+                this.productAdded = false;
+                this.productAddSending = true;
+                const order = {
+                    productId: this.currentProduct.id,
+                    amount: this.productAmount
+                }
+                this.addProductToCart(order)
+                .then(() => {
+                    this.productAdded = true;
+                    this.productAddSending = false;
+                })
+            },
+            getProduct() {
+                this.loading = true;
+                axios.get(BASE_URL + `/products/${this.$route.params.id}`)
+                    .then(response => {
+                        this.productData = response.data
+                    })
+                    .catch(() => this.loadingFailed = true)
+                    .then(() => this.loading = false)
+            }
+        },
+        watch: {
+            '$route.params.id': {
+                handler() {
+                    this.getProduct()
+                },
+                immediate: true
+            }
+        },
+
     }
 </script>
 

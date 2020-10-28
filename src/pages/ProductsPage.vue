@@ -5,7 +5,7 @@
                 Каталог
             </h1>
             <span class="content__info">
-        {{filteredProducts.length}} товара
+<!--        {{filteredProducts.length}} товара-->
       </span>
         </div>
 
@@ -18,7 +18,9 @@
                     :currentPage.sync="page"
             />
             <section class="catalog">
-                <ProductList :products="products"/>
+                <div v-if="loadingFailed">Произошла ошибка при загрузке</div>
+                <Loader v-if="loading" :style="{margin: '0 auto'}"/>
+                <ProductList v-else :products="products"/>
                 <AppPagination
                         v-model="page"
                         :count="countProducts"
@@ -33,7 +35,9 @@
     import ProductList from "@/components/ProductList/ProductList";
     import AppPagination from "@/components/AppPagination/AppPagination";
     import ProductFilter from "@/components/ProductFilter/ProductFilter";
-    import products from "@/data/Products/products";
+    import axios from 'axios'
+    import {BASE_URL} from "@/helpers/config";
+    import Loader from "@/components/UI/Loader/Loader";
 
     export default {
         name: "ProductsPage",
@@ -45,37 +49,80 @@
                 filterColor: '',
                 page: 1,
                 productsPerPage: 3,
+                productsData: null,
+                loading: false,
+                loadingFailed: false,
             }
         ),
         components: {
             ProductList,
             AppPagination,
-            ProductFilter
+            ProductFilter,
+            Loader
         },
         computed: {
-            filteredProducts() {
-                let filteredProducts = products;
-                if (this.filterPriceFrom > 0) {
-                    filteredProducts = filteredProducts.filter(product => product.price > this.filterPriceFrom)
-                }
-                if (this.filterPriceTo > 0) {
-                    filteredProducts = filteredProducts.filter(product => product.price < this.filterPriceTo)
-                }
-                if (this.filterCategoryId){
-                    filteredProducts = filteredProducts.filter(product => product.categoryId === this.filterCategoryId)
-                }
-                if (this.filterColor){
-                    filteredProducts = filteredProducts.filter(product => product.colors.indexOf(this.filterColor) !== -1)
-                }
-                return filteredProducts;
-            },
             products() {
-                const offset = (this.page - 1) * this.productsPerPage;
-                return this.filteredProducts.slice(offset, offset + this.productsPerPage)
+                return this.productsData ?
+                    this.productsData.items.map(product => {
+                        return {
+                            ...product,
+                            image: product.image.file.url,
+                            colors: product.colors.map(color => {
+                                return color.code
+                            })
+                        }
+                    })
+                    : [];
             },
             countProducts() {
-                return this.filteredProducts.length
+                return this.productsData ?
+                    this.productsData.pagination.total
+                    : 0
             }
+        },
+        methods: {
+            getProducts() {
+                this.loading = true;
+                this.loadingFailed = false;
+                clearTimeout(this.getProductsTimer);
+                this.getProductsTimer = setTimeout(() => {
+                    axios.get(BASE_URL + '/products', {
+                        params: {
+                            page: this.page,
+                            limit: this.productsPerPage,
+                            categoryId: this.filterCategoryId,
+                            minPrice: this.filterPriceFrom,
+                            maxPrice: this.filterPriceTo,
+                            colorId: this.filterColor,
+                        }
+                    })
+                        .then(response => {
+                            this.productsData = response.data;
+                        })
+                        .catch(() => this.loadingFailed = true)
+                        .then(() => this.loading = false)
+                }, 0)
+            }
+        },
+        watch: {
+            page() {
+                this.getProducts();
+            },
+            filterPriceFrom() {
+                this.getProducts();
+            },
+            filterPriceTo() {
+                this.getProducts();
+            },
+            filterCategoryId() {
+                this.getProducts();
+            },
+            filterColor() {
+                this.getProducts();
+            },
+        },
+        created() {
+            this.getProducts();
         }
     }
 </script>
