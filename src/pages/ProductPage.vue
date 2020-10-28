@@ -89,7 +89,7 @@
 
                         <div class="item__row">
                             <div class="form__counter">
-                                <button type="button" aria-label="Убрать один товар">
+                                <button type="button" aria-label="Убрать один товар" @click.prevent="subAmount">
                                     <svg width="12" height="12" fill="currentColor">
                                         <use xlink:href="#icon-minus"></use>
                                     </svg>
@@ -97,7 +97,7 @@
 
                                 <input type="text" v-model.number="productAmount">
 
-                                <button type="button" aria-label="Добавить один товар">
+                                <button type="button" aria-label="Добавить один товар" @click.prevent="incAmount">
                                     <svg width="12" height="12" fill="currentColor">
                                         <use xlink:href="#icon-plus"></use>
                                     </svg>
@@ -253,6 +253,15 @@
                     })
                     .catch(() => this.loadingFailed = true)
                     .then(() => this.loading = false)
+            },
+            subAmount() {
+                if (this.productAmount > 1)
+                    this.productAmount -= 1
+                else
+                    this.productAmount = 0
+            },
+            incAmount() {
+                this.productAmount += 1
             }
         },
         watch: {
