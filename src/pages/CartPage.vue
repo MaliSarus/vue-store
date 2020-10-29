@@ -38,9 +38,9 @@
                         Итого: <span>{{totalPrice | numberFormat}} ₽</span>
                     </p>
 
-                    <button class="cart__button button button--primery" type="submit">
+                    <router-link v-if="products.length" tag="button" :to="{name: 'order'}" class="cart__button button button--primery" type="submit">
                         Оформить заказ
-                    </button>
+                    </router-link>
                 </div>
             </form>
         </section>
@@ -51,10 +51,11 @@
     import numberFormat from "../helpers/numberFormat";
     import {mapGetters} from 'vuex'
     import CartItem from "../components/ProductCart/CartItem/CartItem";
+
     export default {
         name: "CartPage",
         components:{
-            CartItem
+            CartItem,
         },
         filters:{
             numberFormat

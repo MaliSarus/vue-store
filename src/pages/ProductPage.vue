@@ -89,23 +89,7 @@
 
                         <div class="item__row">
                             <div class="form__counter">
-                                <CounterButton
-                                        label="Убрать один товар"
-                                        icon-width="12"
-                                        icon-height="12"
-                                        icon="#icon-minus"
-                                        type="sub"
-                                        v-model="productAmount"
-                                />
-                                <input type="text" v-model.number="productAmount">
-                                <CounterButton
-                                        label="Добавить один товар"
-                                        icon-width="12"
-                                        icon-height="12"
-                                        icon="#icon-plus"
-                                        type="add"
-                                        v-model="productAmount"
-                                />
+                                <Counter iconWidth="12" iconHeight="12" v-model="productAmount"/>
                             </div>
 
                             <button class="button button--primery" type="submit" :disabled="productAddSending">
@@ -190,11 +174,12 @@
     import {BASE_URL} from "@/helpers/config";
     import {mapActions} from 'vuex'
     import Loader from "../components/UI/Loader/Loader";
-    import CounterButton from "@/components/UI/CounterButton";
+
+    import Counter from "../components/UI/Counter/Counter";
 
     export default {
         name: "ProductPage",
-        components: {Loader, CounterButton},
+        components: {Counter, Loader},
         data() {
             return {
                 currentColor: '',

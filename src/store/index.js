@@ -9,9 +9,17 @@ export default new Vuex.Store({
     state: {
         cartProducts: [],
         userAccessKey: null,
-        cartProductsData: null
+        cartProductsData: [],
+        orderInfo: null,
     },
     mutations: {
+        updateOrderInfo(state, orderInfo) {
+            state.orderInfo = orderInfo
+        },
+        resetCart(state) {
+            state.cartProducts = [];
+            state.cartProductsData = [];
+        },
         updateProductAmount(state, {productId, amount}) {
             const item = state.cartProducts.find(product => product.productId === productId);
             if (item) {
@@ -113,6 +121,17 @@ export default new Vuex.Store({
                     commit('syncCartProducts')
                 })
 
+        },
+        loadOrderInfo({state, commit}, orderId) {
+            return axios
+                .get(BASE_URL + '/orders/' + orderId, {
+                    params: {
+                        userAccessKey: state.userAccessKey
+                    }
+                })
+                .then(response => {
+                    commit('updateOrderInfo', response.data)
+                })
         }
     },
 
@@ -133,6 +152,9 @@ export default new Vuex.Store({
         },
         cartTotalPrice(state, getters) {
             return getters.cartProductsDetail.reduce((acc, item) => (item.product.price * item.amount) + acc, 0)
+        },
+        getUserAccessKey(state) {
+            return state.userAccessKey;
         }
     },
     modules: {}
