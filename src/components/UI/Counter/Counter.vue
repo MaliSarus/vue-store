@@ -25,17 +25,21 @@
 
     export default {
         name: "Counter",
-        props:['iconWidth', 'iconHeight', 'value'],
+        props: ['iconWidth', 'iconHeight', 'value'],
+        model: {
+            prop: 'value',
+            event: 'change'
+        },
         components: {
             CounterButton
         },
-        computed:{
-            dataValue:{
-                get(){
+        computed: {
+            dataValue: {
+                get() {
                     return this.value
                 },
-                set(value){
-                    this.$emit('input', value)
+                set(value) {
+                    this.$emit('change', value)
                 }
             }
         }
