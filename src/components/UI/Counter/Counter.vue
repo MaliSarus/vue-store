@@ -6,16 +6,16 @@
                 :icon-height="iconHeight"
                 icon="#icon-minus"
                 type="sub"
-                v-model.number="value"
+                v-model.number="dataValue"
         />
-        <input type="text" v-model.number="value">
+        <input type="text" v-model.number="dataValue">
         <CounterButton
                 label="Добавить один товар"
                 :icon-width="iconWidth"
                 :icon-height="iconHeight"
                 icon="#icon-plus"
                 type="add"
-                v-model.number="value"
+                v-model.number="dataValue"
         />
     </div>
 </template>
@@ -25,25 +25,20 @@
 
     export default {
         name: "Counter",
-        model:{
-          prop: 'value',
-          event: 'change-counter'
-        },
         props:['iconWidth', 'iconHeight', 'value'],
         components: {
             CounterButton
         },
-        methods:{
-            changeCounter() {
-                this.$emit('change-counter', this.value)
-            }
-        },
-        watch:{
-            value(){
-                this.changeCounter();
+        computed:{
+            dataValue:{
+                get(){
+                    return this.value
+                },
+                set(value){
+                    this.$emit('input', value)
+                }
             }
         }
-
     }
 </script>
 
